@@ -1,0 +1,336 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>DFT学习（3） | Welcome to butcs-icworkbentch</title><meta name="author" content="butc"><meta name="copyright" content="butc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="LBIST在上一学习中，我们展示了不完备LBIST的建立方法，为什么说是不完备的呢？诸位可以看看代码组成 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DFT学习（3）">
+<meta property="og:url" content="https://butcs-icwork-bentch.github.io/2025/06/04/DFT3/index.html">
+<meta property="og:site_name" content="Welcome to butcs-icworkbentch">
+<meta property="og:description" content="LBIST在上一学习中，我们展示了不完备LBIST的建立方法，为什么说是不完备的呢？诸位可以看看代码组成 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png">
+<meta property="article:published_time" content="2025-06-04T04:45:00.000Z">
+<meta property="article:modified_time" content="2025-06-12T05:33:33.143Z">
+<meta property="article:author" content="butc">
+<meta property="article:tag" content="DFT，可测性设计，综合">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "DFT学习（3）",
+  "url": "https://butcs-icwork-bentch.github.io/2025/06/04/DFT3/",
+  "image": "https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png",
+  "datePublished": "2025-06-04T04:45:00.000Z",
+  "dateModified": "2025-06-12T05:33:33.143Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "butc",
+      "url": "https://butcs-icwork-bentch.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://butcs-icwork-bentch.github.io/2025/06/04/DFT3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.3.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'DFT学习（3）',
+  isHighlightShrink: true,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: transparent;"></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgshaqiu.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Welcome to butcs-icworkbentch</span></a><a class="nav-page-title" href="/"><span class="site-name">DFT学习（3）</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">DFT学习（3）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-04T04:45:00.000Z" title="发表于 2025-06-04 12:45:00">2025-06-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-12T05:33:33.143Z" title="更新于 2025-06-12 13:33:33">2025-06-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/DFT%E7%94%B5%E8%B7%AF/">DFT电路</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="LBIST"><a href="#LBIST" class="headerlink" title="LBIST"></a>LBIST</h1><p>在上一学习中，我们展示了不完备LBIST的建立方法，为什么说是不完备的呢？诸位可以看看代码组成</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><code class="hljs verilog"><span class="hljs-comment">// 纯LBIST结构乘法器(无扫描链)</span><br><span class="hljs-keyword">module</span> multiplier_4bit_lbist(<br>    <span class="hljs-keyword">input</span> clk,           <span class="hljs-comment">// 时钟信号</span><br>    <span class="hljs-keyword">input</span> rst_n,         <span class="hljs-comment">// 复位信号</span><br>    <span class="hljs-keyword">input</span> test_mode,     <span class="hljs-comment">// 测试模式信号</span><br>    <span class="hljs-keyword">input</span> bist_en,       <span class="hljs-comment">// BIST使能信号</span><br>    <span class="hljs-keyword">input</span> bist_start,    <span class="hljs-comment">// BIST启动信号</span><br>    <span class="hljs-keyword">input</span> [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] a,       <span class="hljs-comment">// 乘数a</span><br>    <span class="hljs-keyword">input</span> [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] b,       <span class="hljs-comment">// 乘数b</span><br>    <span class="hljs-keyword">output</span> [<span class="hljs-number">7</span>:<span class="hljs-number">0</span>] p,      <span class="hljs-comment">// 乘法结果</span><br>    <span class="hljs-keyword">output</span> bist_done,    <span class="hljs-comment">// BIST完成标志</span><br>    <span class="hljs-keyword">output</span> bist_pass     <span class="hljs-comment">// BIST通过标志</span><br>);<br><br>    <span class="hljs-comment">// 内部信号</span><br>    <span class="hljs-keyword">wire</span> [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] a_mux, b_mux;<br>    <span class="hljs-keyword">wire</span> [<span class="hljs-number">7</span>:<span class="hljs-number">0</span>] p_internal;<br>    <span class="hljs-keyword">wire</span> bist_active;    <span class="hljs-comment">// BIST激活信号</span><br>    <br>    <span class="hljs-comment">// BIST只有在test_mode和bist_en同时为1时才激活</span><br>    <span class="hljs-keyword">assign</span> bist_active = test_mode &amp;&amp; bist_en;<br>    <br>    <span class="hljs-comment">//===== LFSR - 线性反馈移位寄存器 =====</span><br>    <span class="hljs-keyword">reg</span> [<span class="hljs-number">7</span>:<span class="hljs-number">0</span>] lfsr;<br>    <span class="hljs-keyword">wire</span> lfsr_feedback = lfsr[<span class="hljs-number">7</span>] ^ lfsr[<span class="hljs-number">5</span>] ^ lfsr[<span class="hljs-number">4</span>] ^ lfsr[<span class="hljs-number">3</span>]; <span class="hljs-comment">// 多项式: x^8 + x^6 + x^5 + x^4 + 1</span><br>    <br>    <span class="hljs-keyword">always</span> @(<span class="hljs-keyword">posedge</span> clk <span class="hljs-keyword">or</span> <span class="hljs-keyword">negedge</span> rst_n) <span class="hljs-keyword">begin</span><br>        <span class="hljs-keyword">if</span> (!rst_n)<br>            lfsr &lt;= <span class="hljs-number">8&#x27;hFF</span>; <span class="hljs-comment">// 初始种子</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (bist_active)<br>            lfsr &lt;= &#123;lfsr[<span class="hljs-number">6</span>:<span class="hljs-number">0</span>], lfsr_feedback&#125;;<br>    <span class="hljs-keyword">end</span><br>    <br>    <span class="hljs-comment">// 输入多路复用器</span><br>    <span class="hljs-keyword">assign</span> a_mux = bist_active ? lfsr[<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] : a;<br>    <span class="hljs-keyword">assign</span> b_mux = bist_active ? lfsr[<span class="hljs-number">7</span>:<span class="hljs-number">4</span>] : b;<br>    <br>    <span class="hljs-comment">// 乘法器核心实例化</span><br>    multiplier_4bit core_mult(<br>        <span class="hljs-variable">.a</span>(a_mux),<br>        <span class="hljs-variable">.b</span>(b_mux),<br>        <span class="hljs-variable">.p</span>(p_internal)<br>    );<br>    <br>    <span class="hljs-comment">//===== MISR - 多输入签名寄存器 =====</span><br>    <span class="hljs-keyword">reg</span> [<span class="hljs-number">7</span>:<span class="hljs-number">0</span>] misr;<br>    <span class="hljs-keyword">wire</span> misr_feedback = misr[<span class="hljs-number">7</span>] ^ misr[<span class="hljs-number">5</span>] ^ misr[<span class="hljs-number">3</span>] ^ misr[<span class="hljs-number">0</span>] ^ p_internal[<span class="hljs-number">0</span>];<br>    <br>    <span class="hljs-keyword">always</span> @(<span class="hljs-keyword">posedge</span> clk <span class="hljs-keyword">or</span> <span class="hljs-keyword">negedge</span> rst_n) <span class="hljs-keyword">begin</span><br>        <span class="hljs-keyword">if</span> (!rst_n)<br>            misr &lt;= <span class="hljs-number">8&#x27;h00</span>;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (bist_active)<br>            misr &lt;= &#123;misr[<span class="hljs-number">6</span>:<span class="hljs-number">0</span>], misr_feedback&#125; ^ &#123;p_internal[<span class="hljs-number">7</span>:<span class="hljs-number">1</span>], <span class="hljs-number">1&#x27;b0</span>&#125;;<br>    <span class="hljs-keyword">end</span><br>    <br>    <span class="hljs-comment">//===== BIST 控制器 =====</span><br>    <span class="hljs-keyword">reg</span> [<span class="hljs-number">9</span>:<span class="hljs-number">0</span>] bist_counter; <span class="hljs-comment">// 支持最多1024个测试向量</span><br>    <span class="hljs-keyword">reg</span> bist_running;<br>    <span class="hljs-keyword">reg</span> bist_done_reg;<br>    <span class="hljs-keyword">reg</span> bist_pass_reg;<br>    <span class="hljs-keyword">reg</span> next_bist_running;<br>    <span class="hljs-keyword">reg</span> next_bist_done;<br>    <span class="hljs-keyword">reg</span> next_bist_pass;<br>    <span class="hljs-keyword">reg</span> [<span class="hljs-number">9</span>:<span class="hljs-number">0</span>] next_bist_counter;<br>    <br>    <span class="hljs-comment">// 期望的签名值 - 需要针对特定设计通过仿真确定</span><br>    <span class="hljs-keyword">parameter</span> EXPECTED_SIGNATURE = <span class="hljs-number">8&#x27;h8b</span>; <br>    <br>    <span class="hljs-comment">// FSM 时序逻辑部分</span><br>    <span class="hljs-keyword">always</span> @(<span class="hljs-keyword">posedge</span> clk <span class="hljs-keyword">or</span> <span class="hljs-keyword">negedge</span> rst_n) <span class="hljs-keyword">begin</span><br>        <span class="hljs-keyword">if</span> (!rst_n) <span class="hljs-keyword">begin</span><br>            bist_counter &lt;= <span class="hljs-number">10&#x27;d0</span>;<br>            bist_running &lt;= <span class="hljs-number">1&#x27;b0</span>;<br>            bist_done_reg &lt;= <span class="hljs-number">1&#x27;b0</span>;<br>            bist_pass_reg &lt;= <span class="hljs-number">1&#x27;b0</span>;<br>        <span class="hljs-keyword">end</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">begin</span><br>            bist_counter &lt;= next_bist_counter;<br>            bist_running &lt;= next_bist_running;<br>            bist_done_reg &lt;= next_bist_done;<br>            bist_pass_reg &lt;= next_bist_pass;<br>        <span class="hljs-keyword">end</span><br>    <span class="hljs-keyword">end</span><br>    <br>    <span class="hljs-comment">// FSM 组合逻辑部分</span><br>    <span class="hljs-keyword">always</span> @(*) <span class="hljs-keyword">begin</span><br>        <span class="hljs-comment">// 默认值保持当前状态</span><br>        next_bist_counter = bist_counter;<br>        next_bist_running = bist_running;<br>        next_bist_done = bist_done_reg;<br>        next_bist_pass = bist_pass_reg;<br>        <br>        <span class="hljs-keyword">if</span> (bist_active &amp;&amp; bist_start &amp;&amp; !bist_running &amp;&amp; !bist_done_reg) <span class="hljs-keyword">begin</span><br>            next_bist_running = <span class="hljs-number">1&#x27;b1</span>;<br>            next_bist_counter = <span class="hljs-number">10&#x27;d0</span>;<br>        <span class="hljs-keyword">end</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (bist_running) <span class="hljs-keyword">begin</span><br>            <span class="hljs-keyword">if</span> (bist_counter == <span class="hljs-number">10&#x27;d511</span>) <span class="hljs-keyword">begin</span> <span class="hljs-comment">// 运行512个测试向量</span><br>                next_bist_running = <span class="hljs-number">1&#x27;b0</span>;<br>                next_bist_done = <span class="hljs-number">1&#x27;b1</span>;<br>                next_bist_pass = (misr == EXPECTED_SIGNATURE);<br>            <span class="hljs-keyword">end</span><br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">begin</span><br>                next_bist_counter = bist_counter + <span class="hljs-number">1&#x27;b1</span>;<br>            <span class="hljs-keyword">end</span><br>        <span class="hljs-keyword">end</span><br>    <span class="hljs-keyword">end</span><br>    <br>    <span class="hljs-comment">// 输出多路复用器</span><br>    <span class="hljs-keyword">assign</span> p = bist_active ? misr : p_internal;<br>    <span class="hljs-keyword">assign</span> bist_done = bist_done_reg;<br>    <span class="hljs-keyword">assign</span> bist_pass = bist_pass_reg;<br>    <br><span class="hljs-keyword">endmodule</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h2><p>上述代码展示了一个4位乘法器的LBIST实现。这个实现被称为”不完备”是因为它缺少扫描链结构。下面对代码的主要组成部分进行详细解析：</p>
+<h3 id="1-模块接口"><a href="#1-模块接口" class="headerlink" title="1. 模块接口"></a>1. 模块接口</h3><p>LBIST模块包含以下接口信号：</p>
+<ul>
+<li><p><strong>控制信号</strong>：</p>
+<ul>
+<li><code>clk</code>：时钟信号</li>
+<li><code>rst_n</code>：低电平有效的复位信号</li>
+<li><code>test_mode</code>：测试模式切换信号</li>
+<li><code>bist_en</code>：BIST使能信号</li>
+<li><code>bist_start</code>：启动测试信号</li>
+</ul>
+</li>
+<li><p><strong>数据信号</strong>：</p>
+<ul>
+<li>输入：两个4位乘数<code>a</code>和<code>b</code></li>
+<li>输出：8位乘积<code>p</code></li>
+</ul>
+</li>
+<li><p><strong>测试状态输出</strong>：</p>
+<ul>
+<li><code>bist_done</code>：测试完成标志</li>
+<li><code>bist_pass</code>：测试通过标志</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-LFSR（线性反馈移位寄存器）"><a href="#2-LFSR（线性反馈移位寄存器）" class="headerlink" title="2. LFSR（线性反馈移位寄存器）"></a>2. LFSR（线性反馈移位寄存器）</h3><p>LFSR作为伪随机模式发生器，用于生成测试向量：</p>
+<h3 id="3-输入多路复用器"><a href="#3-输入多路复用器" class="headerlink" title="3. 输入多路复用器"></a>3. 输入多路复用器</h3><p>根据工作模式选择输入源：</p>
+<ul>
+<li>正常模式：使用外部输入<code>a</code>和<code>b</code></li>
+<li>BIST模式：使用LFSR生成的伪随机测试向量</li>
+</ul>
+<h3 id="4-被测电路"><a href="#4-被测电路" class="headerlink" title="4. 被测电路"></a>4. 被测电路</h3><p>实例化一个4位乘法器作为被测电路。</p>
+<h3 id="5-MISR（多输入签名寄存器）"><a href="#5-MISR（多输入签名寄存器）" class="headerlink" title="5. MISR（多输入签名寄存器）"></a>5. MISR（多输入签名寄存器）</h3><p>MISR用于压缩测试响应：</p>
+<ul>
+<li>8位寄存器实现</li>
+<li>采用XOR网络结构压缩乘法器的输出</li>
+<li>每个时钟周期更新，将测试响应累积成一个签名</li>
+</ul>
+<h3 id="6-BIST控制器"><a href="#6-BIST控制器" class="headerlink" title="6. BIST控制器"></a>6. BIST控制器</h3><p>控制器实现为一个状态机：</p>
+<p>主要功能：</p>
+<ul>
+<li>计数器跟踪测试向量数量（执行512个测试向量）</li>
+<li>状态机控制测试流程：初始化→运行→结束</li>
+<li>测试完成后，将MISR的签名与预期值比较</li>
+</ul>
+<h3 id="7-输出多路复用器"><a href="#7-输出多路复用器" class="headerlink" title="7. 输出多路复用器"></a>7. 输出多路复用器</h3><ul>
+<li>正常模式：输出乘法器的计算结果</li>
+<li>BIST模式：输出MISR的内容（便于观察测试状态）</li>
+</ul>
+<h3 id="LBIST的局限性"><a href="#LBIST的局限性" class="headerlink" title="LBIST的局限性"></a>LBIST的局限性</h3><p>这个实现是不完备的，主要局限在于：<br> <strong>缺少扫描链</strong>：完整的LBIST应包含扫描链，以提高可测性，这个设计直接将八位伪随机数的前四位给a后四位给b这样进行输入，输出则是通过misr压缩之后和标志位进行比对。可以看到，输入是电路在func状态下的输入端口，而不是在test状态下的扫描链结构。DFT2中我们说过扫描链模式mux选择是连接scan_en的，而bist模式的打开只需要test_mode 和bist_en就可以打开，此时scan_en是为0的，也就是打开了func模式，因此，从这一角度也能说明不是一个完备的LBIST设计。那么怎么样才能算是一个完备的LBIST呢？<br> 我们看看DFT COMPILER USER GUIDE 是怎么说的。<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250604134635488.png"><br> 可以看到<br> 正确的顺序应该是先产生伪随机码通过scanchain输入芯片，scanchain输出到misr压缩向量成为标志位从而进行比对。原来如此，那么我们看到差异其实就是电路工作模式的问题，只需要改变电路从func到scantest即可，但是这里边就有了新的问题。<br> 什么问题呢？<br> 按道理来说EDA应该是不光能自己产生scanchain也应该能产生性能更加完美的BIST结构，但是对于一些库不太完备的pdk，或者一些小工艺厂，是没有sldb文件去做优化的，因此我们就需要从rtl或者网表级去加入BIST结构，主要包括，lfsr，misr，control center，三个部分，其实有点像UVM测试板块吧，只不过UVM板块不需要做出来，不需要misr压缩，其他都大差不差的。</p>
+<h1 id="实现完备模块的方法？"><a href="#实现完备模块的方法？" class="headerlink" title="实现完备模块的方法？"></a>实现完备模块的方法？</h1><p> 众所周知，scanchain是在eda生成直接写进netlist里，没办法在rtl加，但是由于标准单元库问题无法在eda生成bist调<br> 最后仿真完成修改黄金标志位，就得到了可用的网表，从而进行后仿真，倘若不修改输入模式引脚，则进行bist测试时应该将scan_en，test_mode和bist_en都打开<br> 这样就对DUT电路加载了合适的bist结构。<br> 有了bist结构之后，scanchain的测试向量怎么生成呢，这一点对于syn和mentor公司的软件是不一样的，由于前端生成网表用的大部分是DESIGN COMPILER 所以用syn的TMAX更方便所需要的文件有：</p>
+<p><strong>网表文件</strong> - 门级网表(.v&#x2F;.vhd)<br><strong>扫描路径文件</strong> - 包含扫描链信息(.spf)<br><strong>库文件</strong> - 标准单元库信息(.db)<br><strong>测试协议文件</strong> - 定义测试模式和时序<br><strong>故障模型配置</strong> - 定义要测试的故障类型<br><strong>约束文件</strong> - 时序和测试约束(.sdc&#x2F;.tcl)</p>
+<p>从Design Compiler导出的.spf文件是连接DC和TetraMAX的关键文件，包含了扫描链结构的详细信息，使ATPG能够理解DUT的扫描结构。</p>
+<p>对于MENTOR公司的ATPG工具Tessent FastScan（现属于Siemens），所需文件有：</p>
+<p><strong>网表文件</strong> - 门级网表(.v&#x2F;.vhd)<br><strong>扫描定义文件</strong> - 包含扫描链信息(.proc&#x2F;.do)<br><strong>库文件</strong> - 标准单元库信息(.atpg&#x2F;.v)<br><strong>测试协议文件</strong> - 定义测试模式和时序(.timeplate)<br><strong>故障模型配置</strong> - 定义要测试的故障类型(.fault&#x2F;.tcl)<br><strong>命令脚本</strong> - 控制ATPG流程的脚本文件(.tcl&#x2F;.do)</p>
+<p>Mentor的FastScan工具可以生成多种格式的测试向量，包括STIL、WGL、SVF等，支持各种ATE平台的测试需求。</p>
+<p>TMAX使用方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs plaintext"><br># 打开Tetramax<br>#./tx/amd64/syn/bin/tmax64<br><br># 读取工艺库文件<br>read_netlist ../v/saed90nm.v<br>read_netlist ../v/saed90nm_hvt.v<br>read_netlist ../v/saed90nm_lvt.v<br># 读取设计门级网表<br>read_netlist ../dc_output/multiplier_4bit_lbist.mapped.scan.v<br><br><br>#Build the ATPG model<br>run_build_model multiplier_4bit_lbist<br><br>#建立并运行DRC<br>set_drc ../dc_output/multiplier_4bit_lbist.mapped.scan.spf<br>run_drc<br><br>#加入故障并运行ATPG<br>add_faults -all<br>run_atpg -auto<br><br>#保存测试激励<br>write_patterns /home/student00/student001/Functional_Safety/ATPG_works/DMA/tb_DMA.v -format verilog_single_file -serial -replace<br></code></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202025-05-26%20141941.png"></p>
+<p>显然，如果我用DC生成ATPG只需要网表（dc输出文件），扫描链文件.spf（dc输出文件），再加上标准单元库信息（pdk的.v文件，在modulesim中也会用到），这三个文件的获得只需要通过pdk，或者dc生成即可，毕竟dc和tmax都是syn家的<br>但是tmax市场占有没有mentor多，原因就在于其可视化和某些细节做的不好，也面临一些license问题导致用不了<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250605140324019.png"></p>
+<p>此时就要想办法用mentor的软件啦。<br>这其中就设计了文件转换，这方面我也还在研究。<br>关于tessent的使用有一篇很好的文章<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42327670/article/details/127663529">https://blog.csdn.net/qq_42327670/article/details/127663529</a><br>我搞到了markdown的版本同步链接到网站上，名称叫（DFT3_tessent_CSDN）大家可以看看</p>
+<p>后来经过对lic的破解tmax终于可以用了，于是我第一时间去生成了测试向量，其反馈如下<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606141913957.png"><br>这张图片里的信息量很大，接下来我一一详细说明<br>首先就是开头的notice<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606142050271.png"><br>其主要说明我们的设计有违例，这样产生的测试向量存在失效的可能性，从而降低良率其<br>确实，我们的设计在导入中出现了两个warning<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606143533948.png"><br>分别是N20和B10<br>主要违例是Rules：N20<br>我们来看看N20tmax的userguide怎么说<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606143026561.png"><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606143121855.png"><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606143146208.png"><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606143212440.png"><br>它首先举例说明了N20这个问题，然后教我们怎么去工具里用GUI检查，按照它的说法看看呢</p>
+<p>(                           )</p>
+<p>notice之后继续向下<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606141913957.png"><br>报告组成部分有</p>
+<ul>
+<li><p>ATPG performed for stuck fault model using internal pattern source.（ATPG对电压钳位缺陷的pattern生成报告）</p>
+</li>
+<li><p>Uncollapsed Stuck Fault Summary Report （详细展开说明stuck fault的类型以及覆盖率）</p>
+</li>
+<li><p>Pattern Summary Report （报告基础的pattern生成数量）</p>
+</li>
+<li><p>CPU Usage Summary Report （GPU的使用情况）</p>
+</li>
+<li><p>ATPG performed for stuck fault model using internal pattern source<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606154642595.png"><br>可以看到有27个patterns被保存了下来，这些patterns能检测到1014个faults且没有激活却没有检测到的错误，所以显示未检测到为0，2&#x2F;0&#x2F;0其含义为</p>
+</li>
+<li><p>2 个冗余故障（redundant faults）</p>
+</li>
+<li><p>0 个不可测故障（untestable faults）</p>
+</li>
+<li><p>0 个中止故障（aborted faults<br>冗余故障。指的是电路中由于结构原因，永远无法被激活或检测到的故障（即无论输入什么激励都无法检测到）<br>不可测故障。指的是理论上可以激活，但由于设计或测试限制，无法被检测到的故障。<br>ATPG在生成测试向量时放弃的故障，通常是因为算法超时或复杂度过高，未能找到检测向量。<br>测试覆盖率达到了98.46%，cpu运行了0.1s</p>
+</li>
+</ul>
+<p>-Uncollapsed Stuck Fault Summary Report<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250606155600919.png"><br>可以看到这些stuck faults的类型及其含义如下：</p>
+<ul>
+<li>Detected (DT)：测试向量能覆盖的故障。</li>
+<li>Possibly detected (PT)：工具不完全确定能否检测到的故障。</li>
+<li>Undetectable (UD)：结构性不可测，通常为冗余逻辑导致。</li>
+<li>ATPG untestable (AU)：理论可测但ATPG工具未能检测到。</li>
+<li>Not detected (ND)：被激活但未被观测到的故障。</li>
+</ul>
+<p>所以总结下来就是，测试向量可以覆盖1278个故障，工具不确定的故障为0，冗余逻辑导致不可测2个故障，理论可测但atpg没有探测到的故障20个，被激活但无法检测的故障0个<br>故障模式是dft电路设计的基础，下一篇详细学习这方面的知识。<br>至此fault的检测以及pattern生成结果我们大致已经知道了，在导出测试文件之前，我们有一个疑问，那就是为什么上边faults检测到了1014个，下边报告给出了1278个？</p>
+<p><strong>为什么上面检测到的faults是1014个，而下方报告显示1278个？</strong></p>
+<p>主要原因如下：</p>
+<ul>
+<li><p><strong>统计口径不同</strong>：</p>
+<ul>
+<li>上面”patterns stored”那一行的1014 faults，通常指的是本次ATPG生成的测试向量实际检测到的故障数（即pattern级别的统计）。</li>
+<li>下面”Uncollapsed Stuck Fault Summary Report”中的1278 Detected，指的是所有理论上可以被检测到的故障总数（summary级别统计，可能包含等价故障、未折叠故障等）。</li>
+</ul>
+</li>
+<li><p><strong>故障模型的展开与未展开</strong>：</p>
+<ul>
+<li>有的ATPG工具会在summary报告中统计”未折叠（uncollapsed）”的所有故障（比如每个节点的SA0&#x2F;SA1都算），而主表格可能只统计”折叠后（collapsed）”的故障数。</li>
+</ul>
+</li>
+<li><p><strong>等价故障与分组</strong>：</p>
+<ul>
+<li>某些故障在ATPG过程中被合并或分组（如等价故障），导致主表格和summary统计方式不同。</li>
+</ul>
+</li>
+<li><p><strong>测试模式和覆盖率算法不同</strong>：</p>
+<ul>
+<li>主表格只统计”当前pattern检测到的故障”，而summary会统计”理论上所有pattern能检测到的故障”。</li>
+</ul>
+</li>
+</ul>
+<p><strong>总结：</strong></p>
+<ul>
+<li>1014：实际被本次pattern检测到的故障数（pattern级别统计）。</li>
+<li>1278：所有理论上可检测的故障数（summary级别统计，可能包含等价故障、未折叠故障等）。</li>
+</ul>
+<p>这两者的差异，主要是统计口径和故障模型的不同导致的。实际芯片测试时，通常以summary中的覆盖率为准。</p>
+<p>了解完pattern的报告之后，看看生成的patterns吧<br>这里我们tmax的版本太低了，没办法生成verilog，先生成stil文件看看吧，顺便说一下stil文件的内容组成，如下图是针对设计中两条扫描链生成的stil文件</p>
+<h1 id="STIL文件格式解析"><a href="#STIL文件格式解析" class="headerlink" title="STIL文件格式解析"></a>STIL文件格式解析</h1><p>TetraMAX生成的STIL（Standard Test Interface Language）文件是一种标准化的测试向量描述格式，用于描述设计的测试模式。下面详细分析STIL文件的主要组成部分：</p>
+<h2 id="1-文件头部-Header"><a href="#1-文件头部-Header" class="headerlink" title="1. 文件头部 (Header)"></a>1. 文件头部 (Header)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">STIL 1.0 &#123; Design 2005; &#125;<br>Header &#123;<br>   Title &quot;  TetraMAX(R)  R-2020.09-SP3-i20210113_181330 STIL output&quot;;<br>   Date &quot;Fri Jun  6 16:19:33 2025&quot;;<br>   Source &quot;Minimal STIL for design `multiplier_4bit_lbist&#x27;&quot;;<br>   History &#123;<br>      // ... 历史记录与注释信息 ...<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>STIL版本声明及设计信息</li>
+<li>标题、日期和来源信息</li>
+<li>包含故障覆盖率摘要和测试统计数据的历史记录</li>
+</ul>
+<h2 id="2-信号定义-Signals"><a href="#2-信号定义-Signals" class="headerlink" title="2. 信号定义 (Signals)"></a>2. 信号定义 (Signals)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">Signals &#123;<br>   &quot;clk&quot; In; &quot;rst_n&quot; In; &quot;test_mode&quot; In; &quot;bist_en&quot; In; &quot;bist_start&quot; In; &quot;a[3]&quot; In;<br>   // ... 更多信号定义 ...<br>   &quot;so_0_&quot; Out &#123; ScanOut; &#125; &quot;so_1_&quot; Out &#123; ScanOut; &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>定义所有输入输出信号及其方向</li>
+<li>特殊属性标记（如ScanIn、ScanOut）</li>
+<li>包括控制信号、数据信号和扫描信号</li>
+</ul>
+<h2 id="3-信号组-SignalGroups"><a href="#3-信号组-SignalGroups" class="headerlink" title="3. 信号组 (SignalGroups)"></a>3. 信号组 (SignalGroups)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">SignalGroups &#123;<br>   &quot;_pi&quot; = &#x27;&quot;a[0]&quot; + &quot;a[1]&quot; + &quot;a[2]&quot; + &quot;a[3]&quot; + &quot;b[0]&quot; + // ...&#x27;;<br>   &quot;_in&quot; = &#x27;&quot;clk&quot; + &quot;rst_n&quot; + &quot;test_mode&quot; + // ...&#x27;;<br>   // ... 更多信号组定义 ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>将相关信号组合在一起便于引用</li>
+<li>典型组包括：主输入(_pi)、主输出(_po)、扫描输入(_si)、扫描输出(_so)等</li>
+</ul>
+<h2 id="4-时序定义-Timing"><a href="#4-时序定义-Timing" class="headerlink" title="4. 时序定义 (Timing)"></a>4. 时序定义 (Timing)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">Timing &#123;<br>   WaveformTable &quot;_allclock_launch_capture_WFT_&quot; &#123;<br>      Period &#x27;100ns&#x27;;<br>      Waveforms &#123;<br>         &quot;all_inputs&quot; &#123; 0 &#123; &#x27;0ns&#x27; D; &#125; &#125;<br>         // ... 更多波形定义 ...<br>         &quot;clk&quot; &#123; P &#123; &#x27;0ns&#x27; D; &#x27;45ns&#x27; U; &#x27;55ns&#x27; D; &#125; &#125;<br>      &#125;<br>   &#125;<br>   // ... 更多波形表定义 ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>定义信号时序和波形变化</li>
+<li>周期设置（本例为100ns）</li>
+<li>各信号在周期内的变化模式</li>
+<li>多个波形表用于不同测试阶段</li>
+</ul>
+<h2 id="5-扫描链结构-ScanStructures"><a href="#5-扫描链结构-ScanStructures" class="headerlink" title="5. 扫描链结构 (ScanStructures)"></a>5. 扫描链结构 (ScanStructures)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">ScanStructures &#123;<br>   ScanChain &quot;1&quot; &#123;<br>      ScanLength 15;<br>      ScanIn &quot;si_0_&quot;;<br>      ScanOut &quot;so_0_&quot;;<br>      ScanInversion 0;<br>      ScanCells &quot;multiplier_4bit_lbist.bist_counter_reg_0_&quot; // ... 更多单元 ...<br>      ScanMasterClock &quot;clk&quot;;<br>   &#125;<br>   // ... 第二条扫描链定义 ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>定义设计中的扫描链</li>
+<li>包含长度、输入&#x2F;输出端口、控制时钟等信息</li>
+<li>ScanInversion参数指定是否进行数据反转（0表示不反转）</li>
+<li>ScanCells列出链中所有触发器</li>
+</ul>
+<h2 id="6-程序和宏-Procedures-MacroDefs"><a href="#6-程序和宏-Procedures-MacroDefs" class="headerlink" title="6. 程序和宏 (Procedures&#x2F;MacroDefs)"></a>6. 程序和宏 (Procedures&#x2F;MacroDefs)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">Procedures &#123;<br>   &quot;multiclock_capture&quot; &#123;<br>      W &quot;_multiclock_capture_WFT_&quot;;<br>      C &#123; &quot;all_inputs&quot;=\r10 N 01NNN1; &quot;all_outputs&quot;=\r12 X; &#125;<br>      F &#123; &quot;test_mode&quot;=1; &#125;<br>      V &#123; &quot;_pi&quot;=\r16 # ; &quot;_po&quot;=\r12 # ; &#125;<br>   &#125;<br>   &quot;load_unload&quot; &#123;<br>      // ... 加载/卸载扫描链的程序定义 ...<br>   &#125;<br>&#125;<br>MacroDefs &#123;<br>   &quot;test_setup&quot; &#123;<br>      // ... 测试设置宏定义 ...<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>定义测试步骤和操作</li>
+<li>包括捕获操作、扫描链加载&#x2F;卸载等程序</li>
+<li>测试设置和初始化的宏定义</li>
+</ul>
+<h2 id="7-测试模式-Pattern"><a href="#7-测试模式-Pattern" class="headerlink" title="7. 测试模式 (Pattern)"></a>7. 测试模式 (Pattern)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">Pattern &quot;_pattern_&quot; &#123;<br>   W &quot;_multiclock_capture_WFT_&quot;;<br>   &quot;precondition all Signals&quot;: C &#123; &quot;_pi&quot;=\r16 0 ; &quot;_po&quot;=\r12 X ; &#125;<br>   Macro &quot;test_setup&quot;;<br>   Ann &#123;* chain_test *&#125;<br>   &quot;pattern 0&quot;: Call &quot;load_unload&quot; &#123; <br>      &quot;si_0_&quot;=001100110011001; &quot;si_1_&quot;=00110011001100; &#125;<br>   Call &quot;multiclock_capture&quot; &#123; <br>      &quot;_pi&quot;=0001111101011111; &quot;_po&quot;=HLLLLHHHHLLL; &#125;<br>   // ... 更多测试模式 ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>定义具体测试向量序列</li>
+<li>每个模式包含加载值和期望输出</li>
+<li>调用预定义的程序和宏</li>
+<li>注释说明测试目的</li>
+</ul>
+<p>可以看到，这个STIL文件为我们的4位乘法器定义了27个测试模式，总共生成477个测试周期，覆盖率达到98.46%。STIL格式作为一种工业标准，可以用于多种自动测试设备(ATE)，实现测试向量的便捷共享和应用。<br>但是我们还没有达到生产阶段，肯定是先不能加载ate测试，于是，我们现在需要将stil文件转化成为我们可以仿真的文件，也就是testbentch格式的.v文件，这样就可以去做波形的测试，看是否输入和输出扫描链结果符合预期，只有仿真无误才能说明，atpg输出的测试向量是正确的，从而才能保证加载进ate可以得到正确的结果从而提高可靠性。</p>
+<p>可以使用tmax自带的软件stil2verilog<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250607213248313.png"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250607213412222.png"><br>显示没有lic了，不慌让我去找找，晚点更新<br>这种小众软件确实lic破解的不好QAQ</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://butcs-icwork-bentch.github.io">butc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://butcs-icwork-bentch.github.io/2025/06/04/DFT3/">https://butcs-icwork-bentch.github.io/2025/06/04/DFT3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://butcs-icwork-bentch.github.io" target="_blank">Welcome to butcs-icworkbentch</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/DFT%EF%BC%8C%E5%8F%AF%E6%B5%8B%E6%80%A7%E8%AE%BE%E8%AE%A1%EF%BC%8C%E7%BB%BC%E5%90%88/">DFT，可测性设计，综合</a></div><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.4/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.4/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/03/PCB%E7%BB%98%E5%88%B6/" title="PCB绘制"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">PCB绘制</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a><a class="pagination-related" href="/2025/06/04/DFT3_tessent_CSDN/" title="DFT_tessent_csdn"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">DFT_tessent_csdn</div></div><div class="info-2"><div class="info-item-1">提前声明：本文是csdn链接网页，非本人创建ATPG Basic Tool Flow 完成图8-1所示测试pattern生成所需的任务描述如下： 1.使用”Tessent-Shell”命令调用Tessent Shell。使用Set_context命令将context设置为”patterns-scan”，这允许访问ATPG功能。 2.ATPG工具需要一个结构（门级）设计网表和一个DFT库，您可以分别使用read_cell_library和read_verilog命令来完成。 3.读取库和网表后，工具进入设置模式。在设置模式中，可以交互地使用命令或通过使用dofile来执行多个任务。可以设置有关设计和设计扫描电路的信息。  4.执行所有所需设置后，您可以退出设置模式，该模式会触发许多操作。如果这是第一次尝试退出设置模式，该工具将创建一个flatten的设计模型。  5.接下来，该工具对该模型进行广泛的学习分析。  6.一旦工具创建了一个flatten模型并学习了其行为，它就开始drc。  7.一旦设计通过规则检查，该工具将进入分析模式，在该模式下，您可以对设计的模式集执行模拟。...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/02/01/DFT1/" title="DFT学习（1）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-01</div><div class="info-item-2">DFT学习（1）</div></div><div class="info-2"><div class="info-item-1">DFT可测性设计简介在现代集成电路设计中，DFT（Design For Testability，可测性设计）已成为不可或缺的关键环节。随着芯片复杂度的不断提升，传统的测试方法已无法满足大规模集成电路的测试需求。DFT通过在芯片设计阶段就考虑测试需求，引入扫描链、内建自测试等测试结构，不仅能够显著提高测试效率、降低测试成本，还能确保产品的质量和可靠性。通过DFT技术，可以及时发现并筛选出有缺陷的芯片，提高产品良率，降低返修率，同时大大缩短产品测试周期，加快产品上市速度。在当今竞争激烈的半导体市场中，掌握和应用DFT技术已成为提升产品竞争力的重要手段，它不仅关系到产品的质量和可靠性，也直接影响着产品的开发周期和成本，对整个半导体产业的发展起着重要的推动作用。 DFT可测性电路分类DFT可测性电路主要可以分为以下几类： 扫描链（Scan...</div></div></div></a><a class="pagination-related" href="/2025/02/10/DFT2/" title="DFT学习（2）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-10</div><div class="info-item-2">DFT学习（2）</div></div><div class="info-2"><div class="info-item-1">SCAN CHAIN &amp;&amp; ATPG在学习scanchain之前，我们必须要清楚，不同的dft电路检测chip的角度是不同的，比如本篇文章所讲scan chain结构，是最常用的dft电路，但scan test只能完整检测出scan chain部分的制造缺陷，即使有ATPG(Automatic Test Pattern Generation)用于检测逻辑，但是其覆盖率并不能达到最大化，仍需要搭配BIST使用，对于工业级，车规级，军用级chip来说，其可靠性要求很高，通常需要测试覆盖率达到99%以上，因此合理组合搭配dft电路尤为重要。 SCAN CHAIN 原理在数字芯片中，时序逻辑可以简单理解为组合逻辑与触发器的层次化连接关系，通过clk（上升&#x2F;下降）沿将每一级的信息传递给下一级，扫描链的插入就是指将普通寄存器替换成为扫描寄存器（scan flip-flop）的过程。如图原始的时序电路结构将D触发器替换为DFF替换后的时序电路可以看到，DFF就是对D触发器加入了一个MUX结构，SE scan...</div></div></div></a><a class="pagination-related" href="/2025/05/28/DFT2%E5%AE%9E%E6%93%8D/" title="DFT学习（2）实操"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-28</div><div class="info-item-2">DFT学习（2）实操</div></div><div class="info-2"><div class="info-item-1">本文将对DFT中最常用的scan chain（扫描链）技术进行实操演示。通过具体的操作步骤和代码示例，帮助大家深入理解scan chain的插入、配置、仿真及测试流程。适合有一定DFT基础、希望掌握实际工程操作的同学参考。 理论基础回顾Scan Chain基本原理Scan Chain是DFT中最常用的测试结构，其核心是将普通寄存器替换为扫描寄存器（scan flip-flop）。扫描寄存器在原有D触发器的基础上增加了MUX结构，通过SE（scan enable）信号控制工作模式：  正常工作模式（SE&#x3D;0）：功能与普通D触发器相同 测试模式（SE&#x3D;1）：数据从SI端输入，实现串行扫描功能  ATPG（自动测试向量生成）ATPG是scan chain测试的关键支撑技术，能够自动生成测试向量。 在接下来的实操部分，我们将基于这些理论知识，通过具体示例演示scan chain的实现过程。 #scanchain插入 ##本实践top电路下面是一个4位乘法器的Verilog实现代码： 12345678910111213141516171819202122module...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">butc</div><div class="author-info-description">一个分享技术、生活、学习、工作、创业等内容的博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/butcs-icwork-bentch"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https:2806483105@qq.com" target="_blank" title="QQ"><i class="fab fa-QQ" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LBIST"><span class="toc-number">1.</span> <span class="toc-text">LBIST</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">代码解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A8%A1%E5%9D%97%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 模块接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-LFSR%EF%BC%88%E7%BA%BF%E6%80%A7%E5%8F%8D%E9%A6%88%E7%A7%BB%E4%BD%8D%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%89"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. LFSR（线性反馈移位寄存器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%BE%93%E5%85%A5%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E5%99%A8"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. 输入多路复用器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%A2%AB%E6%B5%8B%E7%94%B5%E8%B7%AF"><span class="toc-number">1.1.4.</span> <span class="toc-text">4. 被测电路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-MISR%EF%BC%88%E5%A4%9A%E8%BE%93%E5%85%A5%E7%AD%BE%E5%90%8D%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%89"><span class="toc-number">1.1.5.</span> <span class="toc-text">5. MISR（多输入签名寄存器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-BIST%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-number">1.1.6.</span> <span class="toc-text">6. BIST控制器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E8%BE%93%E5%87%BA%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E5%99%A8"><span class="toc-number">1.1.7.</span> <span class="toc-text">7. 输出多路复用器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LBIST%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-number">1.1.8.</span> <span class="toc-text">LBIST的局限性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%AE%8C%E5%A4%87%E6%A8%A1%E5%9D%97%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">实现完备模块的方法？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#STIL%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E8%A7%A3%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">STIL文件格式解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%96%87%E4%BB%B6%E5%A4%B4%E9%83%A8-Header"><span class="toc-number">3.1.</span> <span class="toc-text">1. 文件头部 (Header)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BF%A1%E5%8F%B7%E5%AE%9A%E4%B9%89-Signals"><span class="toc-number">3.2.</span> <span class="toc-text">2. 信号定义 (Signals)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BF%A1%E5%8F%B7%E7%BB%84-SignalGroups"><span class="toc-number">3.3.</span> <span class="toc-text">3. 信号组 (SignalGroups)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%97%B6%E5%BA%8F%E5%AE%9A%E4%B9%89-Timing"><span class="toc-number">3.4.</span> <span class="toc-text">4. 时序定义 (Timing)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%89%AB%E6%8F%8F%E9%93%BE%E7%BB%93%E6%9E%84-ScanStructures"><span class="toc-number">3.5.</span> <span class="toc-text">5. 扫描链结构 (ScanStructures)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E7%A8%8B%E5%BA%8F%E5%92%8C%E5%AE%8F-Procedures-MacroDefs"><span class="toc-number">3.6.</span> <span class="toc-text">6. 程序和宏 (Procedures&#x2F;MacroDefs)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%BC%8F-Pattern"><span class="toc-number">3.7.</span> <span class="toc-text">7. 测试模式 (Pattern)</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/04/DFT3/" title="DFT学习（3）">DFT学习（3）</a><time datetime="2025-06-04T04:45:00.000Z" title="发表于 2025-06-04 12:45:00">2025-06-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/04/DFT3_tessent_CSDN/" title="DFT_tessent_csdn">DFT_tessent_csdn</a><time datetime="2025-06-04T04:45:00.000Z" title="发表于 2025-06-04 12:45:00">2025-06-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/03/PCB%E7%BB%98%E5%88%B6/" title="PCB绘制">PCB绘制</a><time datetime="2025-06-03T05:20:00.000Z" title="发表于 2025-06-03 13:20:00">2025-06-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/28/DFT2%E5%AE%9E%E6%93%8D/" title="DFT学习（2）实操">DFT学习（2）实操</a><time datetime="2025-05-28T15:36:00.000Z" title="发表于 2025-05-28 23:36:00">2025-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/10/DFT2/" title="DFT学习（2）">DFT学习（2）</a><time datetime="2025-02-10T15:00:00.000Z" title="发表于 2025-02-10 23:00:00">2025-02-10</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgshaqiu.png);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By butc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/hexo-theme-butterfly@5.3.5/source/js/utils.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hexo-theme-butterfly@5.3.5/source/js/main.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.4/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

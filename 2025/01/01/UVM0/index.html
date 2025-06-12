@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>UVM学习（0） | Welcome to butcs-icworkbentch</title><meta name="author" content="butc"><meta name="copyright" content="butc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="uvm包的环境搭建UVM1.1d下载地址https:&#x2F;&#x2F;www.accellera.org&#x2F;downloads&#x2F;standards&#x2F;uvmuvm实例代码https:&#x2F;&#x2F;github.com&#x2F;emwzq&#x2F;example_uvm 环境搭建 在终端解压压缩包  12tar -zxvf uvm-1.1d.tar.gztar -zxvf example_uvm-master.zip  添加 UVM_HOME">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UVM学习（0）">
+<meta property="og:url" content="https://butcs-icwork-bentch.github.io/2025/01/01/UVM0/index.html">
+<meta property="og:site_name" content="Welcome to butcs-icworkbentch">
+<meta property="og:description" content="uvm包的环境搭建UVM1.1d下载地址https:&#x2F;&#x2F;www.accellera.org&#x2F;downloads&#x2F;standards&#x2F;uvmuvm实例代码https:&#x2F;&#x2F;github.com&#x2F;emwzq&#x2F;example_uvm 环境搭建 在终端解压压缩包  12tar -zxvf uvm-1.1d.tar.gztar -zxvf example_uvm-master.zip  添加 UVM_HOME">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png">
+<meta property="article:published_time" content="2025-01-01T15:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-24T09:31:23.991Z">
+<meta property="article:author" content="butc">
+<meta property="article:tag" content="UVM">
+<meta property="article:tag" content="验证">
+<meta property="article:tag" content="SystemVerilog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "UVM学习（0）",
+  "url": "https://butcs-icwork-bentch.github.io/2025/01/01/UVM0/",
+  "image": "https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png",
+  "datePublished": "2025-01-01T15:00:00.000Z",
+  "dateModified": "2025-05-24T09:31:23.991Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "butc",
+      "url": "https://butcs-icwork-bentch.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://butcs-icwork-bentch.github.io/2025/01/01/UVM0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.3.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'UVM学习（0）',
+  isHighlightShrink: true,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: transparent;"></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgshaqiu.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Welcome to butcs-icworkbentch</span></a><a class="nav-page-title" href="/"><span class="site-name">UVM学习（0）</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">UVM学习（0）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-01T15:00:00.000Z" title="发表于 2025-01-01 23:00:00">2025-01-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-24T09:31:23.991Z" title="更新于 2025-05-24 17:31:23">2025-05-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/UVM%E6%B5%8B%E8%AF%95%EF%BC%88%E6%9A%82%E6%97%B6%E5%81%9C%E6%AD%A2%E6%9B%B4%E6%96%B0%EF%BC%89/">UVM测试（暂时停止更新）</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>uvm包的环境搭建<br>UVM1.1d下载地址<br><a target="_blank" rel="noopener" href="https://www.accellera.org/downloads/standards/uvm">https://www.accellera.org/downloads/standards/uvm</a><br>uvm实例代码<br><a target="_blank" rel="noopener" href="https://github.com/emwzq/example_uvm">https://github.com/emwzq/example_uvm</a></p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><ol>
+<li><p>在终端解压压缩包</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -zxvf uvm-1.1d.tar.gz<br>tar -zxvf example_uvm-master.zip<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>添加 <code>UVM_HOME</code> 环境变量，<code>UVM_HOME</code> 指示的是当前uvm库的路径，即 <code>uvm-1.1d</code>；（自己的路径）</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> UVM_HOME=/home/ICer/uvm-1.1d<br></code></pre></td></tr></table></figure>
+<p> 设置完环境变量后输入以下命令，确保生效；</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> .bashrc<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>修改 <code>Makefile</code> 文件<br> 路径如图（这里是我的，需要找到自己的相对路径）<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521153143966.png"><br> 我们只需要对 <code>.vcs</code> 文件进行修改</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim Makefile.vcs<br></code></pre></td></tr></table></figure>
+<p> 43行加入如下所示部分，主要是解决在64位电脑上操作的适配性问题<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521153656433.png"><br> 这样外部启动环境就配置好了</p>
+</li>
+<li><p>进入到工程文件 <code>example_uvm-master</code>，修改vcs启动文件 <code>setup.vcs</code>，按照下图改即可，只需要更换自己的路径<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521154511259.png"></p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br></code></pre></td></tr></table></figure>
+<p> 表示用sh打开而不是c_shell,因为环境没有install<br> 这里的 <code>VCS_HOME</code> 一定要是个人linux下vcs的安装目录，如果不知道，可以使用</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim .bashrc<br></code></pre></td></tr></table></figure>
+<p> 打开配置文件，查看 <code>VCS_HOME</code> 路径即可如下图<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521155056748.png"><br> 注意 <code>UVM_HOME</code> 要指向 <code>uvm-1.1d</code>，<code>PATH</code> 就是 <code>VCS_HOME</code> 下的 <code>bin</code> 路径，按照格式写即可。<br> 保存好后在当前路径 <code>source</code> 一下</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> setup.vcs<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="文件修改"><a href="#文件修改" class="headerlink" title="文件修改"></a>文件修改</h2><ol start="5">
+<li><p>需要对文件进行修改<br> 文件地址如下<br> dut：<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521160100384.png"><br> <code>top_tb.sv</code> 和 <code>driver.sv</code> 如下<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521160310498.png"><br> 将 <code>dut.sv</code> 文件复制到 <code>top_tb.sv</code> 的文件夹中</p>
+<p> 首先在 <code>top_tb.sv</code> 中，将<code>&#39;timescale 1ns/1ps</code> 注释掉，添加<code>&#39;include &quot;dut.sv&quot;</code><br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521155744547.png"><br> 其次在 <code>top_tb</code> 的文件加入以下几行代码，产生 <code>.fsdb</code> 文件用于verdi查看波形，不设置也可以用vcs查看。</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs systemverilog">initial begin<br>    $fsdbDumpfile(&quot;tb.fsdb&quot;);//产生名为tb.fsdb文件<br>    $fsdbDumpvars;<br>end<br></code></pre></td></tr></table></figure>
+<p> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521160349168.png"></p>
+</li>
+</ol>
+<h2 id="运行与查看"><a href="#运行与查看" class="headerlink" title="运行与查看"></a>运行与查看</h2><ol start="5">
+<li><p>在终端运行vcs</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">vcs -R -full64 +v2k -fsdb +define+FSDB -sverilog -ntb_opts uvm top_tb.sv -debug_all -elab -lca -kdb<br></code></pre></td></tr></table></figure>
+<p> 对命令的解释：</p>
+<ul>
+<li><code>vcs</code>: Synopsys VCS编译器的基本命令</li>
+<li><code>-R</code>: 编译后立即运行仿真（Run after compilation）</li>
+<li><code>-full64</code>: 使用64位模式运行VCS，适用于64位操作系统</li>
+<li><code>+v2k</code>: 启用Verilog-2001标准</li>
+<li><code>-fsdb</code>: 启用FSDB文件生成功能，用于Verdi波形查看</li>
+<li><code>+define+FSDB</code>: 定义宏FSDB，用于FSDB文件生成</li>
+<li><code>-sverilog</code>: 启用SystemVerilog支持</li>
+<li><code>-ntb_opts uvm</code>: 启用UVM（Universal Verification Methodology）支持</li>
+<li><code>top_tb.sv</code>: 顶层测试文件</li>
+<li><code>-debug_all</code>: 启用所有调试功能</li>
+<li><code>-elab</code>: 启用详细的设计分析</li>
+<li><code>-lca</code>: 启用逻辑综合分析</li>
+<li><code>-kdb</code>: 生成知识数据库，用于调试</li>
+</ul>
+<p> 结果如下图<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521164401027.png"><br> <code>UVM_INFO my_driver.sv(20) @ 51100: drv [my_driver] data is drived</code> 这样的信息源自于 <code>my_driver</code> 在 <code>top_tb</code> 的例化，会生成256个测试向量作用于DUT并且打印</p>
+</li>
+<li><p>查看波形</p>
+<ul>
+<li><code>./simv -gui &amp;</code>: vcs查看<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521161430544.png"></li>
+<li><code>verdi -ssf tb.fsdb &amp;</code>: verdi查看<br> <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250521161304791.png"></li>
+</ul>
+</li>
+</ol>
+<p>至此我们完成了一个UVM环境的linux搭建，以及完成了只包含top和driver的测试项目，不过这远不是我们的目的，也不是一个完整的测试平台，后面我会继续分享完整UVM的搭建以及代码解析。</p>
+<p>（当然是取决于有木有时间啦）</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://butcs-icwork-bentch.github.io">butc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://butcs-icwork-bentch.github.io/2025/01/01/UVM0/">https://butcs-icwork-bentch.github.io/2025/01/01/UVM0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://butcs-icwork-bentch.github.io" target="_blank">Welcome to butcs-icworkbentch</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/UVM/">UVM</a><a class="post-meta__tags" href="/tags/%E9%AA%8C%E8%AF%81/">验证</a><a class="post-meta__tags" href="/tags/SystemVerilog/">SystemVerilog</a></div><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.4/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.4/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/01/01/blog/" title="致读者，一起成长"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">致读者，一起成长</div></div><div class="info-2"><div class="info-item-1">WELCOME_TO_BUTC’S_ICWORK_BENTCH 古人云”学而不思则罔，思而不学则殆”，随着经历的增长以及学习内容的增多，很多新鲜有趣的事物还未深刻领略到就已然忘记，徒留遗憾。然而，每一天都是新的篇章，每一刻都蕴含着无限可能，我们能做的仅仅是努力抓住从指尖溜走的时间线条。 在这个信息爆炸的时代，我们常常被各种碎片化的知识所包围，却很少能够静下心来，真正地思考和学习。就像春天的种子，需要阳光和雨水的滋养才能茁壮成长，我们的知识也需要不断地积累和沉淀。于是我决定开始记录每天的学习和思考。无论是技术上的新发现，还是生活中的小感悟，都值得被记录下来。就像古人说的”苟日新，日日新，又日新”，每天都要有新的进步，新的收获。 这个博客，将是我成长的见证，也是我思考的园地。希望在这里，能够与志同道合的朋友们一起分享，一起进步。 让我们从今天开始，一起进步，一起成长。                                      butc 2025_5_20_22:10  </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/01/10/UVM1/" title="UVM学习（1）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-10</div><div class="info-item-2">UVM学习（1）</div></div><div class="info-2"><div class="info-item-1">UVM的第一条原则是：验证平台中所有的组件应该派生自UVM中的类。 对于完整的UVM测试平台，至少包含激励产生（sequence），激励传输（sequencer），对测试代码DUT的驱动（driver），测试代码输出监控器（monitor），模板（reference...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">butc</div><div class="author-info-description">一个分享技术、生活、学习、工作、创业等内容的博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/butcs-icwork-bentch"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https:2806483105@qq.com" target="_blank" title="QQ"><i class="fab fa-QQ" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9"><span class="toc-number">2.</span> <span class="toc-text">文件修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E4%B8%8E%E6%9F%A5%E7%9C%8B"><span class="toc-number">3.</span> <span class="toc-text">运行与查看</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/04/DFT3/" title="DFT学习（3）">DFT学习（3）</a><time datetime="2025-06-04T04:45:00.000Z" title="发表于 2025-06-04 12:45:00">2025-06-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/04/DFT3_tessent_CSDN/" title="DFT_tessent_csdn">DFT_tessent_csdn</a><time datetime="2025-06-04T04:45:00.000Z" title="发表于 2025-06-04 12:45:00">2025-06-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/03/PCB%E7%BB%98%E5%88%B6/" title="PCB绘制">PCB绘制</a><time datetime="2025-06-03T05:20:00.000Z" title="发表于 2025-06-03 13:20:00">2025-06-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/28/DFT2%E5%AE%9E%E6%93%8D/" title="DFT学习（2）实操">DFT学习（2）实操</a><time datetime="2025-05-28T15:36:00.000Z" title="发表于 2025-05-28 23:36:00">2025-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/10/DFT2/" title="DFT学习（2）">DFT学习（2）</a><time datetime="2025-02-10T15:00:00.000Z" title="发表于 2025-02-10 23:00:00">2025-02-10</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgshaqiu.png);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By butc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/hexo-theme-butterfly@5.3.5/source/js/utils.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hexo-theme-butterfly@5.3.5/source/js/main.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.4/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
