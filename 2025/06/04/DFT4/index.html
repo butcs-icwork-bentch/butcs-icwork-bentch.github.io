@@ -1,0 +1,416 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>DFT学习（4） | Welcome to butcs-icworkbentch</title><meta name="author" content="butc"><meta name="copyright" content="butc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="mbistmbist是主要针对于高可靠性soc芯片所设计的线上测试方法，通常用于车规，工业级，军用级等芯片上。目前soc芯片hard marco单元大约达到了数字芯片面积的80%，是面积最大的部分，其可靠性的测量是必要的，但是针对于纯逻辑控制单元，没有这样的mem结构，常用lbist和scan即可。其模型如下要对rom进行检测首先要知道rom的结构，rom其实就是一个一个的小模拟存储电路阵列拼起来">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DFT学习（4）">
+<meta property="og:url" content="https://butcs-icwork-bentch.github.io/2025/06/04/DFT4/index.html">
+<meta property="og:site_name" content="Welcome to butcs-icworkbentch">
+<meta property="og:description" content="mbistmbist是主要针对于高可靠性soc芯片所设计的线上测试方法，通常用于车规，工业级，军用级等芯片上。目前soc芯片hard marco单元大约达到了数字芯片面积的80%，是面积最大的部分，其可靠性的测量是必要的，但是针对于纯逻辑控制单元，没有这样的mem结构，常用lbist和scan即可。其模型如下要对rom进行检测首先要知道rom的结构，rom其实就是一个一个的小模拟存储电路阵列拼起来">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png">
+<meta property="article:published_time" content="2025-06-04T04:45:00.000Z">
+<meta property="article:modified_time" content="2025-06-15T10:13:39.953Z">
+<meta property="article:author" content="butc">
+<meta property="article:tag" content="DFT，可测性设计，综合">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "DFT学习（4）",
+  "url": "https://butcs-icwork-bentch.github.io/2025/06/04/DFT4/",
+  "image": "https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png",
+  "datePublished": "2025-06-04T04:45:00.000Z",
+  "dateModified": "2025-06-15T10:13:39.953Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "butc",
+      "url": "https://butcs-icwork-bentch.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://butcs-icwork-bentch.github.io/2025/06/04/DFT4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.3.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'DFT学习（4）',
+  isHighlightShrink: true,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: transparent;"></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgshaqiu.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Welcome to butcs-icworkbentch</span></a><a class="nav-page-title" href="/"><span class="site-name">DFT学习（4）</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">DFT学习（4）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-04T04:45:00.000Z" title="发表于 2025-06-04 12:45:00">2025-06-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-15T10:13:39.953Z" title="更新于 2025-06-15 18:13:39">2025-06-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/DFT%E7%94%B5%E8%B7%AF/">DFT电路</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="mbist"><a href="#mbist" class="headerlink" title="mbist"></a>mbist</h1><p>mbist是主要针对于高可靠性soc芯片所设计的线上测试方法，通常用于车规，工业级，军用级等芯片上。目前soc芯片hard marco单元大约达到了数字芯片面积的80%，是面积最大的部分，其可靠性的测量是必要的，但是针对于纯逻辑控制单元，没有这样的mem结构，常用lbist和scan即可。<br>其模型如下<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250615151300753.png"><br>要对rom进行检测首先要知道rom的结构，rom其实就是一个一个的小模拟存储电路阵列拼起来的存储电路，其可以看作列地址n和行地址m控制的数字电路，将m和n都看作ii口，其实用之前的办法也可以进行检测，但是成本很高，速度很慢，我们现有的rom主要分为以下几种：</p>
+<h2 id="ROM类型及特点"><a href="#ROM类型及特点" class="headerlink" title="ROM类型及特点"></a>ROM类型及特点</h2><table>
+<thead>
+<tr>
+<th>ROM类型</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>掩模ROM（Mask ROM）</td>
+<td>由制造商在生产过程中一次性编程，无法重新编程；成本低廉，适合大规模生产；数据存储稳定可靠，读取速度快</td>
+</tr>
+<tr>
+<td>可编程ROM（PROM）</td>
+<td>用户可一次性编程，采用熔丝技术；编程后不可修改；编程设备简单，成本较低</td>
+</tr>
+<tr>
+<td>可擦除可编程ROM（EPROM）</td>
+<td>通过紫外线照射可擦除内容，可多次重新编程；带有石英窗口以便紫外线照射；擦除需要专用设备，时间较长</td>
+</tr>
+<tr>
+<td>电可擦除可编程ROM（EEPROM）</td>
+<td>通过电信号可擦除和重新编程；可按字节操作，无需整体擦除；写入速度慢，成本较高，但操作便捷</td>
+</tr>
+<tr>
+<td>闪存（Flash ROM）</td>
+<td>EEPROM的改进型，电擦写速度快；按块擦除，写入灵活；读取速度快，成本适中；广泛用于移动设备和嵌入式系统</td>
+</tr>
+<tr>
+<td>静态ROM（SROM）</td>
+<td>基于静态存储单元设计；读取速度快，功耗低；不需要刷新操作；适用于高速缓存和需要快速访问的场景</td>
+</tr>
+<tr>
+<td>动态ROM（DROM）</td>
+<td>基于动态存储单元设计；存储密度高，成本低；需要定期刷新以保持数据；功耗较高但集成度更高</td>
+</tr>
+<tr>
+<td>铁电RAM（FeRAM）</td>
+<td>结合ROM非易失性和RAM写入速度；低功耗，高耐久性；写入速度快，但存储密度低</td>
+</tr>
+<tr>
+<td>相变存储器（PCRAM&#x2F;PRAM）</td>
+<td>利用材料相变特性存储；非易失，高密度；读写速度快，具有优良的耐久性</td>
+</tr>
+</tbody></table>
+<p>这些不同类型的ROM各有其应用场景，在芯片设计中根据需求选择合适的类型至关重要。在MBIST测试中，需要针对不同ROM类型采用相应的测试策略和模式。</p>
+<p>在进行mbist的时候，我们默认rom为srom即静态存储单元</p>
+<h2 id="SROM与DROM的区别"><a href="#SROM与DROM的区别" class="headerlink" title="SROM与DROM的区别"></a>SROM与DROM的区别</h2><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250615153251205.png"></p>
+<p>SROM（静态ROM）和DROM（动态ROM）是两种不同存储原理的只读存储器，它们有以下主要区别：</p>
+<h3 id="存储单元结构"><a href="#存储单元结构" class="headerlink" title="存储单元结构"></a>存储单元结构</h3><ul>
+<li><strong>SROM</strong>：使用六晶体管（6T）或四晶体管（4T）静态存储单元，每个位存储需要多个晶体管</li>
+<li><strong>DROM</strong>：使用一个晶体管和一个电容（1T1C）的动态存储单元，结构更简单</li>
+</ul>
+<h3 id="数据保持方式"><a href="#数据保持方式" class="headerlink" title="数据保持方式"></a>数据保持方式</h3><ul>
+<li><strong>SROM</strong>：数据稳定存储在触发器中，只要有电源供应就能保持数据，不需要刷新</li>
+<li><strong>DROM</strong>：数据以电荷形式存储在电容中，会随时间泄漏，需要定期刷新（通常几毫秒一次）</li>
+</ul>
+<h3 id="功耗特性"><a href="#功耗特性" class="headerlink" title="功耗特性"></a>功耗特性</h3><ul>
+<li><strong>SROM</strong>：静态功耗较高，但不需要刷新电路，动态功耗较低</li>
+<li><strong>DROM</strong>：静态功耗低，但刷新操作会增加动态功耗</li>
+</ul>
+<h3 id="速度表现"><a href="#速度表现" class="headerlink" title="速度表现"></a>速度表现</h3><ul>
+<li><strong>SROM</strong>：访问速度快，延迟低，适合高性能应用</li>
+<li><strong>DROM</strong>：访问速度相对较慢，受刷新操作影响</li>
+</ul>
+<h3 id="集成度与成本"><a href="#集成度与成本" class="headerlink" title="集成度与成本"></a>集成度与成本</h3><ul>
+<li><strong>SROM</strong>：每位存储需要的晶体管数量多，集成度低，成本高</li>
+<li><strong>DROM</strong>：结构简单，集成度高，成本低，适合大容量存储</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li><strong>SROM</strong>：常用于高速缓存、寄存器文件等需要快速访问的场景</li>
+<li><strong>DROM</strong>：常用于大容量存储，如主存等对成本敏感的场景</li>
+</ul>
+<p>在MBIST测试中，针对SROM和DROM需要采用不同的测试模式和参数，特别是DROM还需要考虑刷新操作对测试的影响。我们主要考虑对sram的mbist测试，因为在高速的soc系统中应用sram是最合理的选择。</p>
+<h2 id="存储器故障模型"><a href="#存储器故障模型" class="headerlink" title="存储器故障模型"></a>存储器故障模型</h2><p>在MBIST测试中，我们需要针对各种可能的存储器缺陷进行测试。以下是常见的存储器故障模型：</p>
+<h3 id="1-静态故障"><a href="#1-静态故障" class="headerlink" title="1. 静态故障"></a>1. 静态故障</h3><table>
+<thead>
+<tr>
+<th>故障类型</th>
+<th>描述</th>
+<th>表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>固定故障（Stuck-at Fault）</td>
+<td>存储单元永久性地固定在0或1状态</td>
+<td>无论写入什么值，读出的始终是0或1</td>
+</tr>
+<tr>
+<td>耦合故障（Coupling Fault）</td>
+<td>一个单元的状态变化影响另一个单元</td>
+<td>当写入一个单元时，另一个单元的值被错误地改变</td>
+</tr>
+<tr>
+<td>桥接故障（Bridge Fault）</td>
+<td>两个或多个信号线之间形成短路</td>
+<td>多个位同时被设置为相同值</td>
+</tr>
+<tr>
+<td>开路故障（Open Fault）</td>
+<td>信号线断开</td>
+<td>无法写入或读取特定单元</td>
+</tr>
+<tr>
+<td>地址解码故障（Address Decoder Fault）</td>
+<td>地址解码器故障</td>
+<td>无法访问某些地址、多地址访问或地址错误映射</td>
+</tr>
+<tr>
+<td>转换故障（Transition Fault）</td>
+<td>单元无法从0变为1或从1变为0</td>
+<td>特定的状态转换失败</td>
+</tr>
+<tr>
+<td>数据保持故障（Data Retention Fault）</td>
+<td>单元无法保持其状态</td>
+<td>数据在一段时间后自发改变</td>
+</tr>
+</tbody></table>
+<h3 id="2-动态故障"><a href="#2-动态故障" class="headerlink" title="2. 动态故障"></a>2. 动态故障</h3><table>
+<thead>
+<tr>
+<th>故障类型</th>
+<th>描述</th>
+<th>表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读干扰故障（Read Disturb Fault）</td>
+<td>读操作改变了被读单元的内容</td>
+<td>多次读取后数据变化</td>
+</tr>
+<tr>
+<td>写干扰故障（Write Disturb Fault）</td>
+<td>写操作影响了相邻单元</td>
+<td>写入一个单元后相邻单元数据变化</td>
+</tr>
+<tr>
+<td>读写恢复故障（Read-Write Recovery Fault）</td>
+<td>连续读写操作之间的时间间隔不足</td>
+<td>快速连续操作导致数据错误</td>
+</tr>
+<tr>
+<td>延迟故障（Delay Fault）</td>
+<td>信号传播延迟过大</td>
+<td>在时钟周期内无法完成操作</td>
+</tr>
+</tbody></table>
+<h3 id="3-组合故障"><a href="#3-组合故障" class="headerlink" title="3. 组合故障"></a>3. 组合故障</h3><table>
+<thead>
+<tr>
+<th>故障类型</th>
+<th>描述</th>
+<th>表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>链式耦合故障（Linked Coupling Fault）</td>
+<td>多个耦合故障同时存在</td>
+<td>复杂的交互错误模式</td>
+</tr>
+<tr>
+<td>邻近模式敏感故障（Neighborhood Pattern Sensitive Fault）</td>
+<td>单元状态受周围单元模式影响</td>
+<td>特定模式下出现错误</td>
+</tr>
+</tbody></table>
+<h3 id="4-接口故障"><a href="#4-接口故障" class="headerlink" title="4. 接口故障"></a>4. 接口故障</h3><table>
+<thead>
+<tr>
+<th>故障类型</th>
+<th>描述</th>
+<th>表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>感知放大器故障（Sense Amplifier Fault）</td>
+<td>感知放大器无法正确检测存储单元状态</td>
+<td>读取错误或不稳定</td>
+</tr>
+<tr>
+<td>预充电故障（Precharge Fault）</td>
+<td>位线预充电电路故障</td>
+<td>读取操作不可靠</td>
+</tr>
+<tr>
+<td>写驱动故障（Write Driver Fault）</td>
+<td>写驱动电路故障</td>
+<td>无法正确写入数据</td>
+</tr>
+</tbody></table>
+<p>MBIST测试算法需要针对这些不同类型的故障设计特定的测试模式和序列。</p>
+<h2 id="March算法"><a href="#March算法" class="headerlink" title="March算法"></a>March算法</h2><p>March算法是一系列用于存储器测试的算法，它通过对存储器单元进行特定顺序的读写操作来检测各种故障。March算法的基本思想是通过对存储器进行一系列有序的读写操作，检测存储单元的故障。</p>
+<h3 id="March算法基本概念"><a href="#March算法基本概念" class="headerlink" title="March算法基本概念"></a>March算法基本概念</h3><ol>
+<li><p><strong>March元素</strong>：March算法由一系列March元素组成，每个元素是一组在每个地址上按特定顺序执行的操作</p>
+</li>
+<li><p><strong>地址顺序</strong>：</p>
+<ul>
+<li>⬆️：按地址递增顺序（从低地址到高地址）</li>
+<li>⬇️：按地址递减顺序（从高地址到低地址）</li>
+<li>⬆️⬇️：地址顺序无关紧要</li>
+</ul>
+</li>
+<li><p><strong>基本操作</strong>：</p>
+<ul>
+<li>w0：写入0</li>
+<li>w1：写入1</li>
+<li>r0：读取并期望值为0</li>
+<li>r1：读取并期望值为1</li>
+</ul>
+</li>
+</ol>
+<h3 id="常见March算法"><a href="#常见March算法" class="headerlink" title="常见March算法"></a>常见March算法</h3><h4 id="1-March-C算法"><a href="#1-March-C算法" class="headerlink" title="1. March C算法"></a>1. March C算法</h4><p>March C是最基础也是最常用的March算法之一，它由6个March元素组成，可以检测地址解码故障、固定故障、转换故障和部分耦合故障。</p>
+<p>March C的操作序列：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">&#123;⬆️(w0); ⬆️(r0,w1); ⬆️(r1,w0); ⬇️(r0,w1); ⬇️(r1,w0); ⬆️(r0)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>具体执行步骤：</p>
+<ol>
+<li>M0: ⬆️(w0) - 按递增顺序，向所有单元写入0</li>
+<li>M1: ⬆️(r0,w1) - 按递增顺序，读取每个单元（期望为0），然后写入1</li>
+<li>M2: ⬆️(r1,w0) - 按递增顺序，读取每个单元（期望为1），然后写入0</li>
+<li>M3: ⬇️(r0,w1) - 按递减顺序，读取每个单元（期望为0），然后写入1</li>
+<li>M4: ⬇️(r1,w0) - 按递减顺序，读取每个单元（期望为1），然后写入0</li>
+<li>M5: ⬆️(r0) - 按递增顺序，读取每个单元（期望为0）</li>
+</ol>
+<h4 id="2-March-C-算法"><a href="#2-March-C-算法" class="headerlink" title="2. March C-算法"></a>2. March C-算法</h4><p>March C-是March C的简化版本，只有5个March元素，但仍能检测大多数静态故障。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">&#123;⬆️(w0); ⬆️(r0,w1); ⬆️(r1,w0); ⬇️(r0,w1); ⬇️(r1)&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3-March-C-算法"><a href="#3-March-C-算法" class="headerlink" title="3. March C+算法"></a>3. March C+算法</h4><p>March C+是March C的扩展版本，增加了对数据保持故障的检测能力。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">&#123;⬆️(w0); ⬆️(r0,w1); ⬆️(r1,w0); ⬇️(r0,w1); ⬇️(r1,w0); ⬆️(r0)&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-March-SS算法"><a href="#4-March-SS算法" class="headerlink" title="4. March SS算法"></a>4. March SS算法</h4><p>March SS（Scan Simple）算法专门设计用于检测耦合故障和邻近模式敏感故障。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">&#123;⬆️(w0); ⬆️(r0,w1); ⬇️(r1,w0); ⬆️(r0,w1); ⬇️(r1,w0); ⬆️(r0)&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="5-MATS-算法（Modified-Algorithm-Test-Sequence）"><a href="#5-MATS-算法（Modified-Algorithm-Test-Sequence）" class="headerlink" title="5. MATS++算法（Modified Algorithm Test Sequence）"></a>5. MATS++算法（Modified Algorithm Test Sequence）</h4><p>MATS++是一种简单但有效的算法，主要用于检测固定故障和转换故障。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">&#123;⬆️(w0); ⬆️(r0,w1); ⬇️(r1,w0,r0)&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="March算法的特点"><a href="#March算法的特点" class="headerlink" title="March算法的特点"></a>March算法的特点</h3><ol>
+<li><strong>时间复杂度</strong>：March算法的时间复杂度为O(n)，其中n是存储器的大小</li>
+<li><strong>故障覆盖率</strong>：不同的March算法有不同的故障覆盖率，通常March C+和March SS能够覆盖大多数常见故障</li>
+<li><strong>实现简单</strong>：March算法实现简单，易于集成到MBIST控制器中</li>
+<li><strong>可扩展性</strong>：可以根据需要扩展March算法以检测特定类型的故障</li>
+</ol>
+<h3 id="March算法在MBIST中的应用"><a href="#March算法在MBIST中的应用" class="headerlink" title="March算法在MBIST中的应用"></a>March算法在MBIST中的应用</h3><p>在实际的MBIST实现中，通常会根据存储器类型和故障模型选择适当的March算法。例如：</p>
+<ol>
+<li>对于需要高故障覆盖率的关键存储器，可能会使用March C+或March SS</li>
+<li>对于一般用途的存储器，可能会使用March C或March C-</li>
+<li>对于对测试时间要求严格的场景，可能会使用MATS++</li>
+</ol>
+<p>March算法是MBIST测试的核心，通过合理选择和组合不同的March算法，可以实现对存储器各种故障的有效检测。</p>
+<h2 id="一个简单的march-C算法"><a href="#一个简单的march-C算法" class="headerlink" title="一个简单的march C算法"></a>一个简单的march C算法</h2><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/img20250615160300301.png"></p>
+<p>其原理是这样的，十位计数器从0加到全1，前六位分配给地址，第7位用于读写转换，后三位分配给测试数据输入，解码器将三位输入解码为八位输出，通过mux输入mem，控制器用于识别完成信号与输出测试模式开启信号，比较器用于比较输入输出是否一致。</p>
+<p>当计数器增加，且q[6]为0时，执行写入，此时q[5:0]执行从0到全一的累计过程，由于此时加法器后三位没有变化（全0），所以这些地址被全部写入相同的测试数据，当q[5:0]全为1时，此时再加，q[6]为1，进行读操作，q[5:0]重复由全为0加到全为1，也就是对刚才写入的地址进行了读取，所以在这个过程中有2^6个地址被选中读写，数据宽度为8位，所以有512个sram被检测，此时加到q[6:0]全为1时，继续加q[7]为1，其他都为0，就开始了新一轮的读写测试，这种测试向量总共有2^3也就是8个循环，等到循环结束，加法器进位端口输出结束指令给控制器，此时就可以看到测试结果是否一致，从而判断rom的好坏。</p>
+<p>以上是一个简单的march c算法的mbist测试电路架构</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://butcs-icwork-bentch.github.io">butc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://butcs-icwork-bentch.github.io/2025/06/04/DFT4/">https://butcs-icwork-bentch.github.io/2025/06/04/DFT4/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://butcs-icwork-bentch.github.io" target="_blank">Welcome to butcs-icworkbentch</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/DFT%EF%BC%8C%E5%8F%AF%E6%B5%8B%E6%80%A7%E8%AE%BE%E8%AE%A1%EF%BC%8C%E7%BB%BC%E5%90%88/">DFT，可测性设计，综合</a></div><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.4/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.4/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/06/04/DFT3_tessent_CSDN/" title="DFT_tessent_csdn"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">DFT_tessent_csdn</div></div><div class="info-2"><div class="info-item-1">提前声明：本文是csdn链接网页，非本人创建ATPG Basic Tool Flow 完成图8-1所示测试pattern生成所需的任务描述如下： 1.使用”Tessent-Shell”命令调用Tessent Shell。使用Set_context命令将context设置为”patterns-scan”，这允许访问ATPG功能。 2.ATPG工具需要一个结构（门级）设计网表和一个DFT库，您可以分别使用read_cell_library和read_verilog命令来完成。 3.读取库和网表后，工具进入设置模式。在设置模式中，可以交互地使用命令或通过使用dofile来执行多个任务。可以设置有关设计和设计扫描电路的信息。  4.执行所有所需设置后，您可以退出设置模式，该模式会触发许多操作。如果这是第一次尝试退出设置模式，该工具将创建一个flatten的设计模型。  5.接下来，该工具对该模型进行广泛的学习分析。  6.一旦工具创建了一个flatten模型并学习了其行为，它就开始drc。  7.一旦设计通过规则检查，该工具将进入分析模式，在该模式下，您可以对设计的模式集执行模拟。...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/02/01/DFT1/" title="DFT学习（1）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-01</div><div class="info-item-2">DFT学习（1）</div></div><div class="info-2"><div class="info-item-1">DFT可测性设计简介在现代集成电路设计中，DFT（Design For Testability，可测性设计）已成为不可或缺的关键环节。随着芯片复杂度的不断提升，传统的测试方法已无法满足大规模集成电路的测试需求。DFT通过在芯片设计阶段就考虑测试需求，引入扫描链、内建自测试等测试结构，不仅能够显著提高测试效率、降低测试成本，还能确保产品的质量和可靠性。通过DFT技术，可以及时发现并筛选出有缺陷的芯片，提高产品良率，降低返修率，同时大大缩短产品测试周期，加快产品上市速度。在当今竞争激烈的半导体市场中，掌握和应用DFT技术已成为提升产品竞争力的重要手段，它不仅关系到产品的质量和可靠性，也直接影响着产品的开发周期和成本，对整个半导体产业的发展起着重要的推动作用。 DFT可测性电路分类DFT可测性电路主要可以分为以下几类： 扫描链（Scan...</div></div></div></a><a class="pagination-related" href="/2025/02/10/DFT2/" title="DFT学习（2）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-10</div><div class="info-item-2">DFT学习（2）</div></div><div class="info-2"><div class="info-item-1">SCAN CHAIN &amp;&amp; ATPG在学习scanchain之前，我们必须要清楚，不同的dft电路检测chip的角度是不同的，比如本篇文章所讲scan chain结构，是最常用的dft电路，但scan test只能完整检测出scan chain部分的制造缺陷，即使有ATPG(Automatic Test Pattern Generation)用于检测逻辑，但是其覆盖率并不能达到最大化，仍需要搭配BIST使用，对于工业级，车规级，军用级chip来说，其可靠性要求很高，通常需要测试覆盖率达到99%以上，因此合理组合搭配dft电路尤为重要。 SCAN CHAIN 原理在数字芯片中，时序逻辑可以简单理解为组合逻辑与触发器的层次化连接关系，通过clk（上升&#x2F;下降）沿将每一级的信息传递给下一级，扫描链的插入就是指将普通寄存器替换成为扫描寄存器（scan flip-flop）的过程。如图原始的时序电路结构将D触发器替换为DFF替换后的时序电路可以看到，DFF就是对D触发器加入了一个MUX结构，SE scan...</div></div></div></a><a class="pagination-related" href="/2025/06/04/DFT3/" title="DFT学习（3）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-04</div><div class="info-item-2">DFT学习（3）</div></div><div class="info-2"><div class="info-item-1">LBIST在上一学习中，我们展示了不完备LBIST的建立方法，为什么说是不完备的呢？诸位可以看看代码组成 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114// 纯LBIST结构乘法器(无扫描链)module multiplier_4bit_lbist(    input clk,           // 时钟信号    input rst_n,         // 复位信号    input test_mode,     // 测试模式信号    input bist_en,       // BIST使能信号    input bist_start,   ...</div></div></div></a><a class="pagination-related" href="/2025/05/28/DFT2%E5%AE%9E%E6%93%8D/" title="DFT学习（2）实操"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-28</div><div class="info-item-2">DFT学习（2）实操</div></div><div class="info-2"><div class="info-item-1">本文将对DFT中最常用的scan chain（扫描链）技术进行实操演示。通过具体的操作步骤和代码示例，帮助大家深入理解scan chain的插入、配置、仿真及测试流程。适合有一定DFT基础、希望掌握实际工程操作的同学参考。 理论基础回顾Scan Chain基本原理Scan Chain是DFT中最常用的测试结构，其核心是将普通寄存器替换为扫描寄存器（scan flip-flop）。扫描寄存器在原有D触发器的基础上增加了MUX结构，通过SE（scan enable）信号控制工作模式：  正常工作模式（SE&#x3D;0）：功能与普通D触发器相同 测试模式（SE&#x3D;1）：数据从SI端输入，实现串行扫描功能  ATPG（自动测试向量生成）ATPG是scan chain测试的关键支撑技术，能够自动生成测试向量。 在接下来的实操部分，我们将基于这些理论知识，通过具体示例演示scan chain的实现过程。 #scanchain插入 ##本实践top电路下面是一个4位乘法器的Verilog实现代码： 12345678910111213141516171819202122module...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgOIP-C.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">butc</div><div class="author-info-description">一个分享技术、生活、学习、工作、创业等内容的博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/butcs-icwork-bentch"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https:2806483105@qq.com" target="_blank" title="QQ"><i class="fab fa-QQ" style="color: #24292e;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#mbist"><span class="toc-number">1.</span> <span class="toc-text">mbist</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ROM%E7%B1%BB%E5%9E%8B%E5%8F%8A%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.</span> <span class="toc-text">ROM类型及特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SROM%E4%B8%8EDROM%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.2.</span> <span class="toc-text">SROM与DROM的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">存储单元结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BF%9D%E6%8C%81%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.2.</span> <span class="toc-text">数据保持方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%80%97%E7%89%B9%E6%80%A7"><span class="toc-number">1.2.3.</span> <span class="toc-text">功耗特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9F%E5%BA%A6%E8%A1%A8%E7%8E%B0"><span class="toc-number">1.2.4.</span> <span class="toc-text">速度表现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E6%88%90%E5%BA%A6%E4%B8%8E%E6%88%90%E6%9C%AC"><span class="toc-number">1.2.5.</span> <span class="toc-text">集成度与成本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.2.6.</span> <span class="toc-text">应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E6%95%85%E9%9A%9C%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">存储器故障模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%9D%99%E6%80%81%E6%95%85%E9%9A%9C"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 静态故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8A%A8%E6%80%81%E6%95%85%E9%9A%9C"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 动态故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%BB%84%E5%90%88%E6%95%85%E9%9A%9C"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 组合故障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%8E%A5%E5%8F%A3%E6%95%85%E9%9A%9C"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 接口故障</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#March%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.</span> <span class="toc-text">March算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#March%E7%AE%97%E6%B3%95%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.4.1.</span> <span class="toc-text">March算法基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81March%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.2.</span> <span class="toc-text">常见March算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-March-C%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">1. March C算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-March-C-%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">2. March C-算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-March-C-%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.2.3.</span> <span class="toc-text">3. March C+算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-March-SS%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.2.4.</span> <span class="toc-text">4. March SS算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-MATS-%E7%AE%97%E6%B3%95%EF%BC%88Modified-Algorithm-Test-Sequence%EF%BC%89"><span class="toc-number">1.4.2.5.</span> <span class="toc-text">5. MATS++算法（Modified Algorithm Test Sequence）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#March%E7%AE%97%E6%B3%95%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">1.4.3.</span> <span class="toc-text">March算法的特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#March%E7%AE%97%E6%B3%95%E5%9C%A8MBIST%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">1.4.4.</span> <span class="toc-text">March算法在MBIST中的应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84march-C%E7%AE%97%E6%B3%95"><span class="toc-number">1.5.</span> <span class="toc-text">一个简单的march C算法</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/04/DFT3/" title="DFT学习（3）">DFT学习（3）</a><time datetime="2025-06-04T04:45:00.000Z" title="发表于 2025-06-04 12:45:00">2025-06-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/04/DFT3_tessent_CSDN/" title="DFT_tessent_csdn">DFT_tessent_csdn</a><time datetime="2025-06-04T04:45:00.000Z" title="发表于 2025-06-04 12:45:00">2025-06-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/04/DFT4/" title="DFT学习（4）">DFT学习（4）</a><time datetime="2025-06-04T04:45:00.000Z" title="发表于 2025-06-04 12:45:00">2025-06-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/03/PCB%E7%BB%98%E5%88%B6/" title="PCB绘制">PCB绘制</a><time datetime="2025-06-03T05:20:00.000Z" title="发表于 2025-06-03 13:20:00">2025-06-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/28/DFT2%E5%AE%9E%E6%93%8D/" title="DFT学习（2）实操">DFT学习（2）实操</a><time datetime="2025-05-28T15:36:00.000Z" title="发表于 2025-05-28 23:36:00">2025-05-28</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://cdn.jsdelivr.net/gh/butcs-icwork-bentch/blogimg@main/imgshaqiu.png);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By butc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/hexo-theme-butterfly@5.3.5/source/js/utils.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hexo-theme-butterfly@5.3.5/source/js/main.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.4/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
